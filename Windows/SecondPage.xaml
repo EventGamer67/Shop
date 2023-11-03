@@ -1,0 +1,42 @@
+﻿<Page x:Class="Shop.Windows.SecondPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Shop.Windows"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+      Title="SecondPage">
+    <Grid>
+        <ui:NavigationView x:Name="NavBar" PaneDisplayMode="LeftCompact" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" IsPaneOpen="False" SelectionChanged="NavBar_SelectionChanged" >
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Tag="HomePage" Icon="Home" Content="Home"/>
+                <ui:NavigationViewItemSeparator />
+                <ui:NavigationViewItem Tag="Users" Content="Apps">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:FontIcon Glyph="&#xE716;"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Items" Content="Games">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:FontIcon Glyph="&#xf158;"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Tag="Add" Icon="Add" Content="AddItems" />
+                <ui:NavigationViewItem Tag="AddCategory" Icon="Globe" Content="Categories" />
+            </ui:NavigationView.MenuItems>
+            <Grid>
+                <ui:Frame Grid.Row="1" NavigationUIVisibility="Hidden" Source="/Windows/SearchPage.xaml" x:Name="ContentFrame">
+                    <ui:Frame.ContentTransitions>
+                        <ui:TransitionCollection>
+                            <ui:NavigationThemeTransition/>
+                        </ui:TransitionCollection>
+                    </ui:Frame.ContentTransitions>
+                </ui:Frame>
+            </Grid>
+        </ui:NavigationView>
+    </Grid>
+    
+</Page>
