@@ -52,7 +52,7 @@ namespace Shop.Controls
             }
         }
 
-        async private void LoadImage()
+        private void LoadImage()
         {
             BitmapImage bitmapImage = new BitmapImage(new Uri(context.item_image[0]));
             this.BgImage.ImageSource = bitmapImage;
@@ -60,7 +60,7 @@ namespace Shop.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Name.Text = context.item_name;
+            ItemName.Text = context.item_name;
             LoadImage();
         }
 

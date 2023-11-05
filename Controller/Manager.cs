@@ -2,18 +2,21 @@
 using Newtonsoft.Json;
 using Shop.Controls;
 using Shop.Models;
+using Shop.Properties;
 using Shop.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Foundation;
 using Windows.Security.Authentication.Web.Core;
 using Windows.System;
 using User = Shop.Models.User;
@@ -62,7 +65,7 @@ namespace Shop.Controller
             try
             {
                 string content = JsonConvert.SerializeObject(category);
-                System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7080/Shop/AddCategory", content);
+                System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync($"{Settings.Default.APIURL}/addcategory", content);
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("категория добавлена");
@@ -93,7 +96,7 @@ namespace Shop.Controller
                     item_image = item.item_image
                 };
                 MessageBox.Show(JsonConvert.SerializeObject(newItem));
-                System.Net.Http.HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7080/Shop/{item.itemID}");
+                System.Net.Http.HttpResponseMessage response = await client.DeleteAsync($"{Settings.Default.APIURL}deleteitem/{item.itemID}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -115,7 +118,7 @@ namespace Shop.Controller
         {
             HttpClient client = new HttpClient();
             JsonContent jsonContent = JsonContent.Create(userDto);
-            System.Net.Http.HttpResponseMessage response = await client.PostAsync("https://localhost:7080/login", jsonContent);
+            System.Net.Http.HttpResponseMessage response = await client.PostAsync($"{Settings.Default.APIURL}login", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -135,7 +138,7 @@ namespace Shop.Controller
         {
             HttpClient client = new HttpClient();
             JsonContent jsonContent = JsonContent.Create(userDto);
-            System.Net.Http.HttpResponseMessage response = await client.PostAsync("https://localhost:7080/register", jsonContent);
+            System.Net.Http.HttpResponseMessage response = await client.PostAsync($"{Settings.Default.APIURL}register", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -155,7 +158,7 @@ namespace Shop.Controller
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync("https://localhost:7080/api/Service/ping");
+                    HttpResponseMessage response = await client.GetAsync($"{Settings.Default.APIURL}ping");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -183,6 +186,59 @@ namespace Shop.Controller
             };
             dialog.Content = item;
             dialog.ShowAsync();
+        }
+
+        public async static Task<bool> LoadData()
+        {
+            HttpClient client = new HttpClient();
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync($"{Settings.Default.APIURL}getcategories");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(jsonContent);
+                        ItemViews.categories = categories;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                response = await client.GetAsync($"{Settings.Default.APIURL}getitems");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        List<Item> items = JsonConvert.DeserializeObject<List<Item>>(jsonContent);
+                        Shop.Views.ItemViews.items = items;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Shop.Tools
                 var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
                 return response.Content.Headers.ContentType.MediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }

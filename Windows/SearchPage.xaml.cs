@@ -24,6 +24,8 @@ using Shop.Tools;
 using System.Collections;
 using Windows.Graphics.Printing3D;
 using System.Data;
+using Shop.Controller;
+using static Shop.Controls.AlertPage;
 
 namespace Shop.Windows
 {
@@ -34,6 +36,15 @@ namespace Shop.Windows
     {
         string categoryFilter = "None";
         string textFilter = "";
+        private SortingTypes _sorting = SortingTypes.Name;
+        public SortingTypes Sorting { get { return _sorting; } set { _sorting = value; ShowItems(); } }
+
+        public enum SortingTypes
+        {
+            Price,
+            Name,
+        };
+
 
         public SearchPage()
         {
@@ -43,69 +54,31 @@ namespace Shop.Windows
 
         async private void InitData()
         {
-            bool res = await LoadData();
+            Loading.IsActive = true;
+            bool res = await Manager.LoadData();
             if (res)
             {
+                Loading.IsActive = false;
                 ShowData();
             }
             else
             {
-                // TODO make reload screen
-            }
-
-        }
-
-        async private Task<bool> LoadData()
-        {
-            Loading.IsActive = true;
-
-            HttpClient client = new HttpClient();
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7080/Shop/test");
-
-                if (response.IsSuccessStatusCode)
+                AlertActionDelegate reloadAction = () =>
                 {
-                    string jsonContent = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-                        List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(jsonContent);
-                        ItemViews.categories = categories;
-                    }
-                    catch (Exception s) {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-
-                response = await client.GetAsync("https://localhost:7080/Shop/items");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsonContent = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-                        List<Item> items = JsonConvert.DeserializeObject<List<Item>>(jsonContent);
-                        Shop.Views.ItemViews.items = items;
-                        Loading.IsActive = false;
-                    }
-                    catch (Exception s)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-                return true;
-
-            } catch (Exception ex)
-            {
-                return false;
+                    Manager.MainWindow.SetPageWithAnimation(new WaitingPage(
+                        actionDelegate: Manager.CheckServer,
+                        True_Page: new SearchPage(),
+                        False_Page: new AlertPage("NoConnection")
+                        ));
+                };
+                AlertPage alertPage = new AlertPage(
+                    Title:"Couldnt load data",
+                    errorMassage: res.ToString(),
+                    icon: "\uE7BA",
+                    BtnText:"Reload",
+                    actionDelegate: reloadAction
+                    );
+                Manager.MainWindow.SetPageWithAnimation(alertPage);
             }
         }
 
@@ -225,15 +198,7 @@ namespace Shop.Windows
             Sorting = SortingTypes.Name;
         }
 
-        private SortingTypes _sorting = SortingTypes.Name;
-        public SortingTypes Sorting { get { return _sorting; } set { _sorting = value; ShowItems(); } }
-
-        public enum SortingTypes
-        {
-            Price,
-            Name,
-        };
-
+        
         private void SortingButton_IsCheckedChanged(ModernWpf.Controls.ToggleSplitButton sender, ModernWpf.Controls.ToggleSplitButtonIsCheckedChangedEventArgs args)
         {
             ShowItems();

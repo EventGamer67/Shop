@@ -89,6 +89,7 @@
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserDto.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="Views\ItemViews.cs" />
     <Compile Include="Windows\CategoryPage.xaml.cs">
@@ -190,6 +191,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="Controls\big.webp" />
+    <None Include="Data.env" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

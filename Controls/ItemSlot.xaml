@@ -37,12 +37,12 @@ xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
             </Button>
             </Grid>
             <Label 
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <TextBlock TextWrapping="WrapWithOverflow" Text="Sample" TextAlignment="Center" Foreground="White" FontSize="24" x:Name="Name"/>
-        </Label>
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <TextBlock TextWrapping="WrapWithOverflow" Text="Sample" TextAlignment="Center" Foreground="White" FontSize="24" x:Name="ItemName"/>
+            </Label>
         </Grid>
     </Grid>
 </UserControl>

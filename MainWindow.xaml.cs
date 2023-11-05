@@ -1,6 +1,7 @@
 ﻿using ModernWpf;
 using Shop.Controller;
 using Shop.Controls;
+using Shop.Properties;
 using Shop.Windows;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,6 @@ namespace Shop
                 Manager.MainWindow.SetPageWithAnimation(new MainPage());
             }
         }
-
         public void SetPageWithAnimation(Page page)
         {
             DoubleAnimation timeline = new DoubleAnimation { Duration = TimeSpan.FromSeconds(0.3), To = 0.0 };

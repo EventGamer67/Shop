@@ -19,7 +19,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
-using Shop.Models;
 using Shop.Controller;
 using Shop.Controls;
 using static Shop.Controls.AlertPage;
@@ -35,8 +34,6 @@ namespace Shop.Windows
         {
             InitializeComponent();
         }
-
-        
 
         //login
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -85,7 +82,5 @@ namespace Shop.Windows
                 Manager.ShowAlert("Error");
             }
         }
-
-        
     }
 }
