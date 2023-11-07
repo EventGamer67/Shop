@@ -1,4 +1,6 @@
-﻿using Shop.Views;
+﻿using Shop.Models;
+using Shop.Views;
+using Stfu.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,12 @@ namespace Shop.Windows
         {
             InitializeComponent();
             CategoryList.ItemsSource = ItemViews.categories;
+        }
+
+        private void CategoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CategoryEditPage categoryEditPage = new CategoryEditPage(e.AddedItems[0] as Category);
+            CategoryEditFrame.Content = categoryEditPage;
         }
     }
 }

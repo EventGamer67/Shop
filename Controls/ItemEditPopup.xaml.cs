@@ -55,44 +55,17 @@ namespace Shop.Controls
             this.category.SelectedItem = ItemViews.categories.Where(cat => cat.categoryID == context.item_categoryID).ToList()[0].category_name;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //save
-            updateItem();
-        }
-
-        async private void updateItem()
-        {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Manager.token);
-            try
+            var newItem = new
             {
-                var newItem = new
-                {
-                    itemID = context.itemID,
-                    item_categoryID = Tools.Tools.getCategoryID(this.category.Text),
-                    item_name = this.item_name.Text,
-                    item_price = Convert.ToDouble(this.price.Text),
-                    item_image = new List<string> { this.item_ImageLink.Text }
-                };
-                
-                System.Net.Http.HttpResponseMessage response = await client.PutAsJsonAsync("https://localhost:7080/Shop/UpdateItem",JsonConvert.SerializeObject(newItem));
-
-                if (response.IsSuccessStatusCode)
-                {
-                    MessageBox.Show("PUT запрос успешно выполнен.");
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка: " + response.StatusCode + " - " + response.ReasonPhrase);
-                    MessageBox.Show(response.Headers.ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                Clipboard.SetText(e.ToString());
-                MessageBox.Show(e.ToString());
-            }
+                itemID = context.itemID,
+                item_categoryID = Tools.Tools.getCategoryID(category.Text),
+                item_name = this.item_name.Text,
+                item_price = Convert.ToDouble(this.price.Text),
+                item_image = new List<string> { this.item_ImageLink.Text }
+            };
+            await Manager.UpdateItem(JsonConvert.SerializeObject(newItem));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Danil\source\repos\Shop\Shop\App.xaml
-14539752551
+15218119057
 
-26-1109945306
-223936840932
-Controls\AlertPage.xaml;Controls\AlertPopup.xaml;Controls\ContexMenu.xaml;Controls\DeleteItemPoup.xaml;Controls\ItemEditPopup.xaml;Controls\ItemSlot.xaml;Controls\NewCategoryPopup.xaml;Controls\NewItemPopup.xaml;MainWindow.xaml;Windows\CategoryPage.xaml;Windows\MainPage.xaml;Windows\SearchPage.xaml;Windows\SecondPage.xaml;Windows\WaitingPage.xaml;
+27-1045180352
+253123114820
+Controls\AlertPage.xaml;Controls\AlertPopup.xaml;Controls\ContexMenu.xaml;Controls\DeleteItemPoup.xaml;Controls\ItemEditPopup.xaml;Controls\ItemSlot.xaml;Controls\NewCategoryPopup.xaml;Controls\NewItemPopup.xaml;MainWindow.xaml;Windows\CategoryEditPage.xaml;Windows\CategoryPage.xaml;Windows\MainPage.xaml;Windows\SearchPage.xaml;Windows\SecondPage.xaml;Windows\WaitingPage.xaml;
 
 False
 

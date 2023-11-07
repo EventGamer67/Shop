@@ -8,10 +8,8 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         Title="❤️CRUD System"
-        Height="450"
+        Height="550"
         Width="800"
-        MinHeight="450"
-        MinWidth="300"
         BorderThickness="2" 
         ui:WindowHelper.UseModernWindowStyle="True" Loaded="Window_Loaded">
     <Window.BorderBrush>

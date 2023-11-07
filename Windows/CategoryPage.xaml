@@ -9,8 +9,16 @@
       Title="CategoryPage">
 
     <Grid>
-        <ui:ListView x:Name="CategoryList" ItemsSource="{Binding ItemViews.categories}">
-            <ui:ListView.ItemTemplate>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <ui:Frame x:Name="CategoryEditFrame" Padding="20"/>
+        </Grid>
+        <Grid Grid.Column="0">
+            <ListView x:Name="CategoryList" ItemsSource="{Binding ItemViews.categories}" Padding="20" SelectionChanged="CategoryList_SelectionChanged">
+            <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -20,7 +28,9 @@
                         <Label Grid.Column="0" Content="{Binding category_name}" Foreground="White" />
                     </Grid>
                 </DataTemplate>
-            </ui:ListView.ItemTemplate>
-        </ui:ListView>
+            </ListView.ItemTemplate>
+        </ListView>
+        </Grid>
+        
     </Grid>
 </Page>

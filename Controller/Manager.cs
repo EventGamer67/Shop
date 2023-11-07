@@ -1,4 +1,5 @@
-﻿using ModernWpf.Controls;
+﻿using Microsoft.AspNetCore.Mvc;
+using ModernWpf.Controls;
 using Newtonsoft.Json;
 using Shop.Controls;
 using Shop.Models;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Security.Authentication.Web.Core;
 using Windows.System;
@@ -237,6 +239,62 @@ namespace Shop.Controller
             }
             catch
             {
+                return false;
+            }
+        }
+
+        public async static Task<string> EditCategory(Category category)
+        {
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                //string content = JsonConvert.SerializeObject(category);
+                System.Net.Http.HttpResponseMessage response = await client.PutAsJsonAsync($"{Settings.Default.APIURL}updatecategory", category);
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("edited добавлена");
+                    ItemViews.categories.Where(cat => cat.categoryID == category.categoryID).ToList()[0].category_name = category.category_name;
+                    return "ok";
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка: " + response.StatusCode + " - " + response.ReasonPhrase);
+                    return "err";
+
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return "err";
+            }
+        }
+
+        public async static Task<bool> UpdateItem(string jsoncontext)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Manager.token);
+            try
+            {
+                System.Net.Http.HttpResponseMessage response = await client.PutAsJsonAsync($"{Settings.Default.APIURL}UpdateItem", jsoncontext);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("PUT запрос успешно выполнен.");
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка: " + response.StatusCode + " - " + response.ReasonPhrase);
+                    MessageBox.Show(response.Headers.ToString());
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Clipboard.SetText(e.ToString());
+                MessageBox.Show(e.ToString());
                 return false;
             }
         }
