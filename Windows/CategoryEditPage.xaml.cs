@@ -40,8 +40,7 @@ namespace Shop.Windows
         //delete
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //delete
-
+            Manager.DeleteCategory(context);
         }
     }
 }

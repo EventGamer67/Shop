@@ -55,17 +55,7 @@ namespace Shop.Windows
             {
                 ContentFrame.Content = new CategoryPage();
 
-                //new category popup
-                //ContentDialog contentDialog = new ContentDialog();
-                //var itemEditPopup = new NewCategoryPopup();
-
-                //itemEditPopup.CloseDialogRequested += (s, argss) =>
-                //{
-                //    contentDialog.Hide();
-                //};
-
-                //contentDialog.Content = itemEditPopup;
-                //contentDialog.ShowAsync();
+                
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ModernWpf.Controls;
 using Newtonsoft.Json;
 using Shop.Controls;
@@ -16,11 +17,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Windows.ApplicationModel.AppExtensions;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Security.Authentication.Web.Core;
 using Windows.System;
+using Windows.Web.Http;
 using User = Shop.Models.User;
 
 namespace Shop.Controller
@@ -63,11 +66,9 @@ namespace Shop.Controller
 
         public async static void AddCategory(Category category)
         {
-            HttpClient client = new HttpClient();
             try
             {
-                string content = JsonConvert.SerializeObject(category);
-                System.Net.Http.HttpResponseMessage response = await client.PostAsJsonAsync($"{Settings.Default.APIURL}/addcategory", content);
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().PostAsJsonAsync($"{Settings.Default.APIURL}addcategory", category);
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("категория добавлена");
@@ -86,7 +87,6 @@ namespace Shop.Controller
 
         public async static void deleteItem(Item item)
         {
-            HttpClient client = new HttpClient();
             try
             {
                 var newItem = new
@@ -98,7 +98,7 @@ namespace Shop.Controller
                     item_image = item.item_image
                 };
                 MessageBox.Show(JsonConvert.SerializeObject(newItem));
-                System.Net.Http.HttpResponseMessage response = await client.DeleteAsync($"{Settings.Default.APIURL}deleteitem/{item.itemID}");
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().DeleteAsync($"{Settings.Default.APIURL}deleteitem/{item.itemID}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -116,11 +116,36 @@ namespace Shop.Controller
             }
         }
 
+        public async static Task<bool> DeleteCategory(Category category)
+        {
+            try
+            {
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().DeleteAsync($"{Settings.Default.APIURL}deletecategory/{category.categoryID}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("DELETE запрос успешно выполнен.");
+                    ItemViews.categories.Remove(category);
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка: " + response.StatusCode + " - " + response.ReasonPhrase);
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return false;
+            }
+        }
+
         public async static Task<bool> Login(UserDto userDto)
         {
-            HttpClient client = new HttpClient();
+            System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
             JsonContent jsonContent = JsonContent.Create(userDto);
-            System.Net.Http.HttpResponseMessage response = await client.PostAsync($"{Settings.Default.APIURL}login", jsonContent);
+            System.Net.Http.HttpResponseMessage response = await httpClient.PostAsync($"{Settings.Default.APIURL}login", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -138,9 +163,9 @@ namespace Shop.Controller
 
         public async static Task<bool> Register(UserDto userDto)
         {
-            HttpClient client = new HttpClient();
+            System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
             JsonContent jsonContent = JsonContent.Create(userDto);
-            System.Net.Http.HttpResponseMessage response = await client.PostAsync($"{Settings.Default.APIURL}register", jsonContent);
+            System.Net.Http.HttpResponseMessage response = await httpClient.PostAsync($"{Settings.Default.APIURL}register", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -156,20 +181,18 @@ namespace Shop.Controller
 
         public async static Task<bool> CheckServer()
         {
+            System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    HttpResponseMessage response = await client.GetAsync($"{Settings.Default.APIURL}ping");
+                System.Net.Http.HttpResponseMessage response = await httpClient.GetAsync($"{Settings.Default.APIURL}ping");
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch (HttpRequestException)
@@ -192,10 +215,9 @@ namespace Shop.Controller
 
         public async static Task<bool> LoadData()
         {
-            HttpClient client = new HttpClient();
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{Settings.Default.APIURL}getcategories");
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().GetAsync($"{Settings.Default.APIURL}getcategories");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -215,7 +237,7 @@ namespace Shop.Controller
                     return false;
                 }
 
-                response = await client.GetAsync($"{Settings.Default.APIURL}getitems");
+                response = await HttpClientSingletone.Instance().GetAsync($"{Settings.Default.APIURL}getitems");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -245,12 +267,10 @@ namespace Shop.Controller
 
         public async static Task<string> EditCategory(Category category)
         {
-            HttpClient client = new HttpClient();
-
             try
             {
                 //string content = JsonConvert.SerializeObject(category);
-                System.Net.Http.HttpResponseMessage response = await client.PutAsJsonAsync($"{Settings.Default.APIURL}updatecategory", category);
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().PutAsJsonAsync($"{Settings.Default.APIURL}updatecategory", category);
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("edited добавлена");
@@ -273,11 +293,9 @@ namespace Shop.Controller
 
         public async static Task<bool> UpdateItem(string jsoncontext)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + Manager.token);
             try
             {
-                System.Net.Http.HttpResponseMessage response = await client.PutAsJsonAsync($"{Settings.Default.APIURL}UpdateItem", jsoncontext);
+                System.Net.Http.HttpResponseMessage response = await HttpClientSingletone.Instance().PutAsJsonAsync($"{Settings.Default.APIURL}UpdateItem", jsoncontext);
 
                 if (response.IsSuccessStatusCode)
                 {

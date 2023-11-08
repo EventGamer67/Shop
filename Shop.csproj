@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controller\HttpClientSingletone.cs" />
     <Compile Include="Controller\Manager.cs" />
     <Compile Include="Controls\AlertPage.xaml.cs">
       <DependentUpon>AlertPage.xaml</DependentUpon>

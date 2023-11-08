@@ -17,19 +17,24 @@
             <ui:Frame x:Name="CategoryEditFrame" Padding="20"/>
         </Grid>
         <Grid Grid.Column="0">
-            <ListView x:Name="CategoryList" ItemsSource="{Binding ItemViews.categories}" Padding="20" SelectionChanged="CategoryList_SelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="{Binding category_name}" Foreground="White" />
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <StackPanel Orientation="Vertical">
+                <ui:CommandBar Background="Transparent" IsOpen="False" VerticalAlignment='Center' VerticalContentAlignment="Center" HorizontalAlignment="Left" DefaultLabelPosition="Right" HorizontalContentAlignment="Left" >
+                    <ui:AppBarButton Icon="Add" Label="Add" Click="AppBarButton_Click" />
+                </ui:CommandBar>
+                <ListView x:Name="CategoryList" ItemsSource="{Binding ItemViews.categories}" Padding="20" SelectionChanged="CategoryList_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="{Binding category_name}" Foreground="White" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
         </Grid>
         
     </Grid>

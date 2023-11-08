@@ -1,4 +1,7 @@
-﻿using Shop.Models;
+﻿using ModernWpf.Controls;
+using Shop.Controller;
+using Shop.Controls;
+using Shop.Models;
 using Shop.Views;
 using Stfu.Linq;
 using System;
@@ -21,7 +24,7 @@ namespace Shop.Windows
     /// <summary>
     /// Interaction logic for CategoryPage.xaml
     /// </summary>
-    public partial class CategoryPage : Page
+    public partial class CategoryPage : System.Windows.Controls.Page
     {
         public CategoryPage()
         {
@@ -33,6 +36,22 @@ namespace Shop.Windows
         {
             CategoryEditPage categoryEditPage = new CategoryEditPage(e.AddedItems[0] as Category);
             CategoryEditFrame.Content = categoryEditPage;
+        }
+
+        //add category
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Manager.AddCategory(new Category());
+            ContentDialog contentDialog = new ContentDialog();
+            var itemEditPopup = new NewCategoryPopup();
+
+            itemEditPopup.CloseDialogRequested += (s, argss) =>
+            {
+                contentDialog.Hide();
+            };
+
+            contentDialog.Content = itemEditPopup;
+            contentDialog.ShowAsync();
         }
     }
 }
